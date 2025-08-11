@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>방탈출: 잠긴 교실의 비밀</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- 클릭 가능한 오브젝트 영역 -->
+        <div class="clickable-object" id="speaker-obj" style="top: 13%; left: 66%; width: 15%; height: 13%;"></div>
+        <div class="clickable-object" id="clock-obj" style="top: 19%; left: 42%; width: 9%; height: 15%;"></div>
+        <div class="clickable-object" id="computer-obj" style="top: 40%; left: 52%; width: 12%; height: 18%;"></div>
+        <div class="clickable-object" id="book-obj" style="top: 36%; left: 65%; width: 20%; height: 42%;"></div>
+        <div class="clickable-object" id="door-obj" style="top: 29%; left: 18%; width: 17%; height: 60%;"></div>
+    </div>
+
+    <!-- 힌트 표시 영역 -->
+    <div id="hint-display">
+        <h3>획득한 힌트</h3>
+        <ul id="hint-list"></ul>
+    </div>
+
+
+    <!-- 모달창들 -->
+    <div id="modal-container" class="hidden">
+        <!-- 스피커 모달 -->
+        <div id="speaker-modal" class="modal-content hidden">
+            <h2>사운드 패턴 게임</h2>
+            <p>들려오는 소리의 순서를 기억하고 그대로 버튼을 누르세요.</p>
+            <button id="play-sound-btn">소리 듣기</button>
+            <div id="speaker-buttons">
+                <button class="sound-btn" data-sound="1">소리 1</button>
+                <button class="sound-btn" data-sound="2">소리 2</button>
+                <button class="sound-btn" data-sound="3">소리 3</button>
+                <button class="sound-btn" data-sound="4">소리 4</button>
+            </div>
+            <p>나의 입력: <span id="player-sequence"></span></p>
+            <button class="close-btn">닫기</button>
+        </div>
+
+        <!-- 시계 모달 -->
+        <div id="clock-modal" class="modal-content hidden">
+            <h2>시간의 수수께끼</h2>
+            <img src="https://storage.googleapis.com/static.bountysource.com/uploads/75b2e42f741a38f321264b22c8332b50/68747470733a2f2f692e696d6775722e636f6d2f59666f4838426d2e706e67" alt="시계 이미지" style="width: 150px;">
+            <p>"나는 시작이자 끝을 의미하며, 때로는 아무것도 없음을 상징합니다. 나는 어떤 숫자일까요?"</p>
+            <input type="text" id="clock-answer" placeholder="정답을 입력하세요">
+            <button id="clock-submit">제출</button>
+            <button class="close-btn">닫기</button>
+        </div>
+
+        <!-- 컴퓨터 모달 -->
+        <div id="computer-modal" class="modal-content hidden">
+            <h2>암호 해독 게임</h2>
+            <p class="code-text">C:\> ENTER SYSTEM COMMAND:</p>
+            <p>힌트: 칠판에 적힌 암호어를 해독해야 한다.<br>어지럽혀진 두 번째 단어를 바로잡아 입력하시오.</p>
+            <p style="font-size: 1.5rem; letter-spacing: 5px;">WRENKT</p>
+            <input type="text" id="computer-answer" placeholder="명령어를 입력하세요">
+            <button id="computer-submit">입력</button>
+            <button class="close-btn">닫기</button>
+        </div>
+
+        <!-- 책 모달 -->
+        <div id="book-modal" class="modal-content hidden">
+            <h2>올바른 책 찾기</h2>
+            <p>힌트: 지혜의 숲에서 길을 찾으려면 교실 안의 학생 수를 세어보아라. 그 숫자와 관련된 책에 마지막 단서가 있다.</p>
+            <div id="bookshelf">
+                <div class="book-item">세 개의 열쇠</div>
+                <div class="book-item">우주여행</div>
+                <div class="book-item correct-book">제5원소</div>
+                <div class="book-item">컴퓨터 구조</div>
+                <div class="book-item">첫 번째 사랑</div>
+            </div>
+            <button class="close-btn">닫기</button>
+        </div>
+
+        <!-- 문 모달 -->
+        <div id="door-modal" class="modal-content hidden">
+            <h2>비밀번호 입력</h2>
+            <div id="keypad">
+                <div id="password-display">----</div>
+                <div class="keypad-row">
+                    <button class="key">1</button>
+                    <button class="key">2</button>
+                    <button class="key">3</button>
+                </div>
+                <div class="keypad-row">
+                    <button class="key">4</button>
+                    <button class="key">5</button>
+                    <button class="key">6</button>
+                </div>
+                <div class="keypad-row">
+                    <button class="key">7</button>
+                    <button class="key">8</button>
+                    <button class="key">9</button>
+                </div>
+                <div class="keypad-row">
+                    <button id="clear-btn">C</button>
+                    <button class="key">0</button>
+                    <button id="enter-btn">E</button>
+                </div>
+            </div>
+            <button class="close-btn">닫기</button>
+        </div>
+    </div>
+
+    <!-- 게임 성공 모달 -->
+    <div id="success-modal" class="modal-content hidden" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1001;">
+        <h2>탈출 성공!</h2>
+        <p>철컥-! 소리와 함께 문이 열립니다.<br>당신은 마침내 잠겨 있던 교실에서 탈출했습니다!</p>
+        <button id="restart-btn">다시 시작</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
